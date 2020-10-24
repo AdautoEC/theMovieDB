@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1047947663329",
+    "firebase_url": "https://themoviedb-3aeb3.firebaseio.com",
+    "project_id": "themoviedb-3aeb3",
+    "storage_bucket": "themoviedb-3aeb3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047947663329:android:05e16862c38fd8452064a0",
+        "android_client_info": {
+          "package_name": "com.example.themoviedb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047947663329-t8a6f4fi72rnn0burpabhhmocphdn640.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCymxotg72rfD9Qxnf2wGoGCnUGo9YGG5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047947663329-t8a6f4fi72rnn0burpabhhmocphdn640.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
