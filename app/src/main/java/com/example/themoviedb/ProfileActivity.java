@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class ProfileActivity extends AppCompatActivity {
@@ -22,7 +23,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         mAuth = FirebaseAuth.getInstance();
-        Log.d("TAG", mAuth.getCurrentUser().getUid());
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        //Log.d("TAG", mUser.getDisplayName());
 
 
         //mAuth.signOut();

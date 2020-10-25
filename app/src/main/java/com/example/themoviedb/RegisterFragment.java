@@ -25,6 +25,8 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -36,6 +38,9 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static android.content.ContentValues.TAG;
 
@@ -43,6 +48,9 @@ public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Button mBtnRegister;
     private EditText mEtName, mEtEmail, mEtPassword;
+    private DatabaseReference mUserDB;
+
+
 
 
     public RegisterFragment() {
@@ -53,6 +61,7 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mAuth = FirebaseAuth.getInstance();
+        mUserDB = FirebaseDatabase.getInstance().getReference();
 
         View v = inflater.inflate(R.layout.fragment_register, container, false);
         loadGE(v);
@@ -125,11 +134,30 @@ public class RegisterFragment extends Fragment {
         mAuth.createUserWithEmailAndPassword(mEtEmail.getText().toString(), mEtPassword.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                dialog.dismiss();
                 if (!task.isSuccessful()) {
+                    dialog.dismiss();
                     RegisterError(task);
                 }else{
-                    RegisterSuccess();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(mEtName.getText().toString()).build();
+
+                    user.updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        User user = new User(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getEmail());
+                                        mUserDB.child("users").child(mAuth.getCurrentUser().getUid()).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                dialog.dismiss();
+                                                RegisterSuccess();
+                                            }
+                                        });
+                                    }
+                                }
+                            });
                 }
             }
         });
