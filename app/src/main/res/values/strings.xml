@@ -1,4 +1,8 @@
 <resources>
+    <!--Geral-->
+    <string name="btn_ok">Entendi!</string>
+
+    <!--Login geral-->
     <string name="app_name">Login The Movie</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="swipe_left_for_register">Registre deslizando para a esquerda</string>
@@ -10,4 +14,22 @@
     <string name="register">Registrar</string>
     <string name="re_type_password">Confirmar Senha</string>
     <string name="your_name">Nome Completo</string>
+
+    <!--Login\Register error-->
+    <string name="login_error_title">Falha no login</string>
+    <string name="login_error_content_default">Verifique o email e/ou a senha e tente novamente</string>
+    <string name="login_error_content_empty_password">Insira uma senha</string>
+    <string name="login_error_content_empty_email">Insira um email</string>
+    <string name="login_register_error_content_unnoted">Ops…</string>
+    <string name="register_error_title">Falha no resgistro</string>
+    <string name="register_error_content_empty_email">Insira um email</string>
+    <string name="register_error_content_empty_password">Insira uma senha</string>
+    <string name="register_error_content_empty_name">Insira uma nome</string>
+    <string name="register_error_content_email_already_in_use">Email já registrado</string>
+    <string name="register_error_content_credential_already_in_use">Facebook já registrado</string>
+    <string name="register_error_content_password_weak">A senha deve ter mais de 6 digitos</string>
+
+    <!--Login\Register success-->
+    <string name="login_success_title">Logando</string>
+    <string name="login_success_content">Conectando ao servidor</string>
 </resources>
