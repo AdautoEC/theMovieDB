@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -62,7 +63,8 @@ public class LoginFragment extends Fragment {
 
         mCallbackManager = CallbackManager.Factory.create();
 
-        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.setReadPermissions("email");
+        loginButton.setFragment(this);
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -170,6 +172,12 @@ public class LoginFragment extends Fragment {
 
     public void loginSuccess(){
         startActivity(new Intent(getActivity(), ProfileActivity.class));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
