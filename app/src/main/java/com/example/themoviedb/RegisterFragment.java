@@ -16,21 +16,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
+
+import static android.content.ContentValues.TAG;
 
 public class RegisterFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Button mBtnRegister;
     private EditText mEtName, mEtEmail, mEtPassword;
+
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -155,4 +168,5 @@ public class RegisterFragment extends Fragment {
     public void RegisterSuccess(){
         startActivity(new Intent(getActivity(), ProfileActivity.class));
     }
+
 }

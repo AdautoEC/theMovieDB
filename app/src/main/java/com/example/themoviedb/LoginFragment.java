@@ -16,17 +16,30 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseUser;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
+import static android.content.ContentValues.TAG;
 
 public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     private Button mBtnLogin;
     private EditText mEtEmail, mEtPassword;
+    private CallbackManager mCallbackManager;
+    private LoginButton loginButton;
 
     public LoginFragment() {
     }
@@ -34,6 +47,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FacebookSdk.sdkInitialize(getActivity());
         mAuth = FirebaseAuth.getInstance();
 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
@@ -46,11 +60,33 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        mCallbackManager = CallbackManager.Factory.create();
+
+        loginButton.setReadPermissions("email", "public_profile");
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                handleFacebookAccessToken(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "facebook:cancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG, "facebook:error:" + error.getMessage());
+            }
+        });
+
         return v;
     }
 
     public void loadGE(View v){
         mBtnLogin = v.findViewById(R.id.btn_login);
+        loginButton = v.findViewById(R.id.login_button);
         mEtEmail = v.findViewById(R.id.et_email);
         mEtPassword = v.findViewById(R.id.et_password);
     }
@@ -134,5 +170,24 @@ public class LoginFragment extends Fragment {
 
     public void loginSuccess(){
         startActivity(new Intent(getActivity(), ProfileActivity.class));
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            loginSuccess();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        }
+
+                    }
+                });
     }
 }

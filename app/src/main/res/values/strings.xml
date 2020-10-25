@@ -1,6 +1,9 @@
 <resources>
     <!--Geral-->
     <string name="btn_ok">Entendi!</string>
+    <string name="facebook_app_id">398484167845900</string>
+    <string name="fb_login_protocol_scheme">fb398484167845900</string>
+
 
     <!--Login geral-->
     <string name="app_name">Login The Movie</string>
