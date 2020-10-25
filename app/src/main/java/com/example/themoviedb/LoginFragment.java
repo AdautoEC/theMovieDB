@@ -50,6 +50,7 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getActivity());
         mAuth = FirebaseAuth.getInstance();
+        mCallbackManager = CallbackManager.Factory.create();
 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
         loadGE(v);
@@ -61,8 +62,16 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        mCallbackManager = CallbackManager.Factory.create();
 
+        return v;
+    }
+
+    public void loadGE(View v){
+        mBtnLogin = v.findViewById(R.id.btn_login);
+        mEtEmail = v.findViewById(R.id.et_email);
+        mEtPassword = v.findViewById(R.id.et_password);
+
+        loginButton = v.findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
         loginButton.setFragment(this);
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -82,15 +91,6 @@ public class LoginFragment extends Fragment {
                 Log.d(TAG, "facebook:error:" + error.getMessage());
             }
         });
-
-        return v;
-    }
-
-    public void loadGE(View v){
-        mBtnLogin = v.findViewById(R.id.btn_login);
-        loginButton = v.findViewById(R.id.login_button);
-        mEtEmail = v.findViewById(R.id.et_email);
-        mEtPassword = v.findViewById(R.id.et_password);
     }
 
     public void login(){
@@ -182,16 +182,17 @@ public class LoginFragment extends Fragment {
 
     private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        final ProgressDialog dialog = ProgressDialog.show(getActivity(), getString(R.string.login_success_title), getString(R.string.login_success_content), true);
+        dialog.show();
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        dialog.dismiss();
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             loginSuccess();
 
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
 
