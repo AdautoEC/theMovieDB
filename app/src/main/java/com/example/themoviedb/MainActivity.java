@@ -2,6 +2,7 @@ package com.example.themoviedb;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAuth = FirebaseAuth.getInstance();
+        ViewPager viewPager = findViewById(R.id.viewPager);
+
+        AuthenticationPagerAdapter pagerAdapter = new AuthenticationPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragmet(new LoginFragment());
+        pagerAdapter.addFragmet(new RegisterFragment());
+        viewPager.setAdapter(pagerAdapter);
+
+        /*mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -44,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("AUTH", "Login Efetuado com sucesso!!!");
                 }
             }
-        });
+        });*/
     }
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
@@ -59,6 +67,6 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
-    }
+    }*/
 
 }
